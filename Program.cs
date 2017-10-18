@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading;
+using Nancy.Hosting.Self;
+
 
 namespace sample_dotnet_rest
 {
@@ -14,12 +10,23 @@ namespace sample_dotnet_rest
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var configuration = new HostConfiguration
+            {
+                UrlReservations = new UrlReservations {CreateAutomatically = true}
+            };
+            using (var nancyHost = new NancyHost(configuration, new Uri("http://localhost:8888/v1/")))
+            {
+                nancyHost.Start();
+                Console.WriteLine("Nancy now listening - navigating to http://localhost:8888/v1/.");
+                try
+                {
+                    Process.Start("http://localhost:8888/v1/");
+                }
+                catch (Exception)
+                {
+                }
+                Thread.Sleep(Timeout.Infinite);
+            }
         }
-
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
     }
 }
