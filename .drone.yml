@@ -7,7 +7,7 @@ pipeline:
   publish_dotnet:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
-    repo: josmo/sample-dotnet-service-1
+    repo: josmo/sample-dotnet-rest
     tag:
       - latest
       - ${DRONE_BUILD_NUMBER}
@@ -20,8 +20,8 @@ pipeline:
     image: peloton/drone-rancher
     url: http://rancher.seattleslow.com
     secrets: [ rancher_access_key, rancher_secret_key ]
-    service: gugg/sample-dotnet-service-1
-    docker_image: josmo/sample-dotnet-service-1:${DRONE_BUILD_NUMBER}
+    service: sample/sample-dotnet-rest
+    docker_image: josmo/sample-dotnet-rest:${DRONE_BUILD_NUMBER}
     start_first: false
     confirm: true
     timeout: 260
